@@ -1,0 +1,130 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  student-information-management-system-v2
+
+  Sample SAM Template for student-information-management-system-v2
+Resources:
+  StudentInfoTable:
+    Type: AWS::Serverless::SimpleTable
+
+  Greeter:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: greeter/
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+      - x86_64
+
+  StudentInfomanagementSystemGraphQLApi:
+    Type: AWS::Serverless::GraphQLApi
+    Properties:
+      SchemaUri: ./gql/schema.graphql
+      Auth:
+        Type: API_KEY
+      ApiKeys:
+        MyApiKey:
+          Description: my api key
+      DataSources:
+        DynamoDb:
+          Posts:
+            TableName: !Ref StudentInfoTable
+            TableArn: !GetAtt StudentInfo.Arn
+        Lambda:
+          Greeter:
+            FunctionArn: !GetAtt Greeter.Arn
+      Functions:
+        createStudent:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: 1.0.0
+          DataSource: NONE
+          CodeUri: ./gql/createStudent.js
+        preprocessPostStudent:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: 1.0.0
+          DataSource: NONE
+          CodeUri: ./gql/preprocessPostStudent.js  
+        updateStudent:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: 1.0.0
+          DataSource: Posts
+          CodeUri: ./gql/updateStudent.js
+        getStudent:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: 1.0.0
+          DataSource: Posts
+          CodeUri: ./gql/getStudent.js
+        deleteStudent:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: 1.0.0
+          DataSource: Posts
+          CodeUri: ./gql/deleteStudent.js  
+        greet:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: 1.0.0
+          DataSource: Greeter
+          CodeUri: ./gql/greet.js
+      Resolvers:
+        Mutation:
+          addPost:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: 1.0.0
+            Pipeline:
+            - preprocessPostStudent
+            - createStudent
+        Query:
+          getPost:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: 1.0.0
+            Pipeline:
+            - getStudent
+          sayHello:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: 1.0.0
+            Pipeline:
+            - greet
+          sayGoodbye:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: 1.0.0
+            Pipeline:
+            - greet
+
+
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name:
+        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName:
+        Ref: ApplicationResourceGroup
+      AutoConfigurationEnabled: 'true'
+Outputs:
+  HelloWorldGraphQLApi:
+    Description: StudentInfomanagementSystemGraphQLApi endpoint URL for Prod environment
+    Value: !GetAtt StudentInfomanagementSystemGraphQLApi.GraphQLUrl
+  HelloWorldGraphQLApiMyApiKey:
+    Description: API Key for StudentInfomanagementSystemGraphQLApi
+    Value: !GetAttStudentInfomanagementSystemGraphQLApiMyApiKey.ApiKey
+
+# # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Tracing: Active
+  Api:
+    TracingEnabled: true
