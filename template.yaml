@@ -17,7 +17,7 @@ Resources:
       Architectures:
       - x86_64
 
-  StudentInfomanagementSystemGraphQLApi:
+  HelloWorldGraphQLApi:
     Type: AWS::Serverless::GraphQLApi
     Properties:
       SchemaUri: ./gql/schema.graphql
@@ -81,26 +81,30 @@ Resources:
             - preprocessPostStudent
             - createStudent
         Query:
-          getPost:
+          getStudent:
             Runtime:
               Name: APPSYNC_JS
               Version: 1.0.0
             Pipeline:
             - getStudent
-          sayHello:
+          listStudents:
             Runtime:
               Name: APPSYNC_JS
               Version: 1.0.0
             Pipeline:
-            - greet
+            - listStudents
           sayGoodbye:
             Runtime:
               Name: APPSYNC_JS
               Version: 1.0.0
             Pipeline:
             - greet
-
-
+  MyApiKey:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId: !GetAtt HelloWorldGraphQLApi.ApiId
+      Description: My API key description  
+  
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
     Properties:
@@ -117,10 +121,10 @@ Resources:
 Outputs:
   HelloWorldGraphQLApi:
     Description: StudentInfomanagementSystemGraphQLApi endpoint URL for Prod environment
-    Value: !GetAtt StudentInfomanagementSystemGraphQLApi.GraphQLUrl
+    Value: !GetAtt HelloWorldGraphQLApi.GraphQLUrl
   HelloWorldGraphQLApiMyApiKey:
     Description: API Key for StudentInfomanagementSystemGraphQLApi
-    Value: !GetAttStudentInfomanagementSystemGraphQLApiMyApiKey.ApiKey
+    Value: !GetAtt MyApiKey.ApiKey
 
 # # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
