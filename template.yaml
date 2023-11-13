@@ -5,7 +5,7 @@ Description: >
 
   Sample SAM Template for student-information-management-system-v2
 Resources:
-  StudentInfoTable:
+  PostsTable:
     Type: AWS::Serverless::SimpleTable
 
   Greeter:
@@ -29,8 +29,8 @@ Resources:
       DataSources:
         DynamoDb:
           Posts:
-            TableName: !Ref StudentInfoTable
-            TableArn: !GetAtt StudentInfo.Arn
+            TableName: !Ref PostsTable
+            TableArn: !GetAtt PostsTable.Arn
         Lambda:
           Greeter:
             FunctionArn: !GetAtt Greeter.Arn
