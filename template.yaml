@@ -73,13 +73,31 @@ Resources:
           CodeUri: ./gql/greet.js
       Resolvers:
         Mutation:
-          addPost:
+          createStudent:
             Runtime:
               Name: APPSYNC_JS
               Version: 1.0.0
             Pipeline:
             - preprocessPostStudent
             - createStudent
+
+          Mutation:
+          deleteStudent:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: 1.0.0
+            Pipeline:
+            - preprocessPostStudent
+            - deleteStudent
+
+          Mutation:
+          updateStudent:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: 1.0.0
+            Pipeline:
+            - preprocessPostStudent
+            - updateStudent    
         Query:
           getStudent:
             Runtime:
