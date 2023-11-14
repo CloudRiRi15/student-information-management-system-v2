@@ -80,8 +80,6 @@ Resources:
             Pipeline:
             - preprocessPostStudent
             - createStudent
-
-          Mutation:
           deleteStudent:
             Runtime:
               Name: APPSYNC_JS
@@ -89,8 +87,6 @@ Resources:
             Pipeline:
             - preprocessPostStudent
             - deleteStudent
-
-          Mutation:
           updateStudent:
             Runtime:
               Name: APPSYNC_JS
@@ -105,18 +101,6 @@ Resources:
               Version: 1.0.0
             Pipeline:
             - getStudent
-          listStudents:
-            Runtime:
-              Name: APPSYNC_JS
-              Version: 1.0.0
-            Pipeline:
-            - listStudents
-          sayGoodbye:
-            Runtime:
-              Name: APPSYNC_JS
-              Version: 1.0.0
-            Pipeline:
-            - greet
   MyApiKey:
     Type: AWS::AppSync::ApiKey
     Properties:

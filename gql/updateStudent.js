@@ -1,14 +1,17 @@
-import { util } from "@aws-appsync/utils";
-
-export function updateStudentRequest(ctx) {
-  const { key, values } = ctx.args.input;
-  return {
-    operation: "UpdateStudent",
-    key: util.dynamodb.toMapValues(key),
-    attributeValues: util.dynamodb.toMapValues(values),
-  };
+/**
+ * Starts the resolver execution
+ * @param {import('@aws-appsync/utils').Context} ctx the context
+ * @returns {*} the return value sent to the first AppSync function
+ */
+export function request(ctx) {
+  return {};
 }
-export function updateStudentResponse(ctx) {
-    return ctx.result;
-  }
-  
+
+/**
+ * Returns the resolver result
+ * @param {import('@aws-appsync/utils').Context} ctx the context
+ * @returns {*} the return value of the last AppSync function response handler
+ */
+export function response(ctx) {
+  return ctx.prev.result;
+}
