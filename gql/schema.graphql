@@ -9,8 +9,8 @@ type Query {
 }
 
 type Mutation {
-  createStudent(id: String!, Full Name: String!, email: String!, year: Int!): Student!
-  updateStudent(id: String!, weather: String, town: String!): Student!
+  createStudent(id: String!, Name: String!, email: String!): Student!
+  updateStudent(id: String!, Surname: String, year: String!): Student!
   deleteStudent(id: String!): Boolean!
 }
 
