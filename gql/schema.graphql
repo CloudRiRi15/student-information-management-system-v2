@@ -1,30 +1,24 @@
-type Student {
-  studentId: String!
-  courseId: String!
-  name: String!
-  email: String!
-  year: Int!
+schema {
+  query: Query
+  mutation: Mutation
 }
 
 type Query {
-  getStudent(studentId: String, courseId: String): Student
-  listStudents: [Student]
+  getStudent(id: String!): Student!
+  listStudents(limit: Int, nextToken: String): [Student!]!
 }
 
 type Mutation {
-  createStudent(
-    studentId: String
-    courseId: String
-    name: String
-    email: String
-    year: String
-  ): Student
-  updateStudent(
-    studentId: String
-    courseId: String
-    name: String
-    email: String
-    year: String
-  ): Student
-  deleteStudent(studentId: String, courseId: String): Student
+  createStudent(id: String!, Full Name: String!, email: String!, year: Int!): Student!
+  updateStudent(id: String!, weather: String, town: String!): Student!
+  deleteStudent(id: String!): Boolean!
+}
+
+type Student {
+  id: String!
+  name: String!
+  email: String!
+  YearEnrolled: String!
+  createdOn: AWSTimestamp!
+  updatedOn: AWSTimestamp
 }
